@@ -1,5 +1,5 @@
-./models/
-./data/
-./output/
-./cpp/build/
-./cpp/lib/
+models/
+data/
+output/
+cpp/build/
+cpp/lib/
