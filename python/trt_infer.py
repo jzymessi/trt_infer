@@ -27,13 +27,12 @@ def test_yolox():
          'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear',
          'hair drier', 'toothbrush' ]
     
-    engine = '/workspace/tensorrt/TensorRT-For-YOLO-Series/yolox_s.trt'
+    engine = '../models/yolox_s.trt'
     pred = Yolox(engine_path=engine)
-    image = "/workspace/tensorrt/trt_infer/data/dog.jpg"
+    image = "../data/dog.jpg"
     img = cv2.imread(image)
-    end2end = True
+    end2end = False
     dets = pred.inference(image,end2end)
-    print(dets)
     if dets is not None:
             final_boxes, final_scores, final_cls_inds = dets[:,:4], dets[:, 4], dets[:, 5]
             img = vis(img, final_boxes, final_scores, final_cls_inds,conf=0.5, class_names = class_names)

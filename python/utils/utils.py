@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
 import tensorrt as trt
 import pycuda.autoinit
 import pycuda.driver as cuda
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
-import torch
 
 class BaseEngine(object):
     def __init__(self, engine_path):

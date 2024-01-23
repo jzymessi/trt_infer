@@ -184,6 +184,8 @@ void TRTEngine::detect_img(std::vector<std::string>& file_paths, std::vector<flo
         for (int batch = 0; batch < batch_size; batch++) {
             memcpy(blob + batch * channel * input_w * input_h, blobs[batch], channel * input_w * input_h * sizeof(float));
         }
+        
+
         // run inference
         int size = batch_size * channel * input_w * input_h;
         doInference(*context, blob, this->prob, output_size, size,INPUT_BLOB_NAME, OUTPUT_BLOB_NAME); //执行推理 

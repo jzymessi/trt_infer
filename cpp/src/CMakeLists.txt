@@ -9,8 +9,8 @@ set_target_properties(fpn PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../lib
 )
 
-add_library(yolo SHARED yolo.cpp)
-set_target_properties(yolo PROPERTIES
+add_library(yolox SHARED yolox.cpp)
+set_target_properties(yolox PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../lib
 )
 

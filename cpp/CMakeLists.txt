@@ -34,7 +34,7 @@ target_link_libraries(main
         ${OpenMP_CXX_LIBRARIES}
         resnet
         fpn
-        yolo
+        yolox
         utils
         nvinfer
         cudart

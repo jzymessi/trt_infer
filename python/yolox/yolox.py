@@ -20,13 +20,13 @@ def vis(img, boxes, scores, cls_ids, conf=0.5, class_names=None):
         box = boxes[i]
         cls_id = int(cls_ids[i])
         score = scores[i]
+        print(box, cls_id, score)
         if score < conf:
             continue
         x0 = int(box[0])
         y0 = int(box[1])
         x1 = int(box[2])
         y1 = int(box[3])
-
         color = (_COLORS[cls_id] * 255).astype(np.uint8).tolist()
         text = '{}:{:.1f}%'.format(class_names[cls_id], score * 100)
         txt_color = (0, 0, 0) if np.mean(_COLORS[cls_id]) > 0.5 else (255, 255, 255)
@@ -114,8 +114,6 @@ def preproc(image, input_size, mean, std, swap=(2, 0, 1)):
     ).astype(np.float32)
     padded_img[: int(img.shape[0] * r), : int(img.shape[1] * r)] = resized_img
     
-    # padded_img = padded_img[:, :, ::-1]
-    # padded_img /= 255.0
     if mean is not None:
         padded_img -= mean
     if std is not None:
@@ -146,13 +144,16 @@ class Yolox(BaseEngine):
     
     def postprocess(self,predictions, ratio):
         boxes = predictions[:, :4]
+        # print(boxes)
         scores = predictions[:, 4:5] * predictions[:, 5:]
         boxes_xyxy = np.ones_like(boxes)
         boxes_xyxy[:, 0] = boxes[:, 0] - boxes[:, 2] / 2.
         boxes_xyxy[:, 1] = boxes[:, 1] - boxes[:, 3] / 2.
         boxes_xyxy[:, 2] = boxes[:, 0] + boxes[:, 2] / 2.
         boxes_xyxy[:, 3] = boxes[:, 1] + boxes[:, 3] / 2.
+        # print(boxes_xyxy)
         boxes_xyxy /= ratio
+        # print(ratio)
         dets = multiclass_nms(boxes_xyxy, scores, nms_thr=0.45, score_thr=0.1)
         return dets
     
@@ -162,25 +163,22 @@ class Yolox(BaseEngine):
         return dets
     
     def postprocess_plugin(self,data,ratio):
-        print(data)
+        # print(data)
         num, final_boxes, final_scores, final_cls_inds = data
-        print(num," ", len(final_boxes), " ",len(final_scores), " ",len(final_cls_inds))
+        # print(num," ", len(final_boxes), " ",len(final_scores), " ",len(final_cls_inds))
         final_boxes = np.reshape(final_boxes/ratio, (-1, 4))
         dets = np.concatenate([final_boxes[:num[0]], np.array(final_scores)[:num[0]].reshape(-1, 1), np.array(final_cls_inds)[:num[0]].reshape(-1, 1)], axis=-1)
         return dets
     
     def inference(self,img_path,end2end):
         input_data,ratio = self.preprocess_input(img_path)
+        # print(input_data)
         data = super().infer(input_data)
+        # print(data)
         if end2end:
             dets = self.postprocess_plugin(data,ratio)
         else:
             dets = self.postprocess_output(data,ratio)
-        
-        # if dets is not None:
-        #     final_boxes, final_scores, final_cls_inds = dets[:,:4], dets[:, 4], dets[:, 5]
-        #     frame = vis(frame, final_boxes, final_scores, final_cls_inds,conf=conf, class_names=self.class_names)
-        # cv2.imshow('frame', frame)
 
         return dets
 

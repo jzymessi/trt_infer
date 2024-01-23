@@ -12,7 +12,6 @@ class Resnet(BaseEngine):
         
     def preprocess_input(self, img_path):
         
-        ## numpy实现
         img = cv2.imread(img_path)
         resized_img = cv2.resize(img, (self.weight, self.height)) 
 
