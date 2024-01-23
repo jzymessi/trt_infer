@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -O3 -DNDEBUG  -shared -Wl,-soname,libyolox.so -o ../../lib/libyolox.so CMakeFiles/yolox.dir/yolox.cpp.o   -L/usr/local/cuda/lib64  -L/usr/lib/x86_64-linux-gnu 
